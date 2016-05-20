@@ -1,0 +1,11 @@
+{
+  "name": "fargovr",
+  "dependencies": {
+    
+    "font-awesome": "~4.5.0",
+    
+    
+    "bootstrap": "3.3.6"
+    
+ }
+}

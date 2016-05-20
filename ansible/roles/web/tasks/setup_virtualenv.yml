@@ -1,0 +1,87 @@
+---
+- name: Install packages via pip
+  pip: name={{ item }}
+  become: yes 
+  with_items:
+    - virtualenv
+    - virtualenvwrapper
+  tags:
+      - web
+      - venv
+
+- name: create the virtualenvwrapper dir if not present
+  become: yes
+  become_user: "{{ deploy_user }}"
+  file: path={{ virtualenvs_dir }} owner={{ deploy_user }} group={{ deploy_user }} state=directory
+  tags:
+      - web
+      - venv
+
+- name: Add virtualenvwrapper init1 to the bash profile
+  lineinfile: dest=/home/{{ deploy_user }}/.profile line="export WORKON_HOME=~/virtualenvs"
+  become: yes
+  become_user: "{{ deploy_user }}"
+  tags:
+      - web
+      - venv
+
+- name: Add virtualenvwrapper init to the bash profile
+  lineinfile: dest=/home/{{ deploy_user }}/.profile line="source /usr/local/bin/virtualenvwrapper.sh"
+  become: yes
+  become_user: "{{ deploy_user }}"
+  tags:
+      - web
+      - venv
+
+- name: create the project virtualenv
+  command: virtualenv {{ virtualenvs_dir }}/{{ project_name }}-env --no-site-packages --python=/usr/bin/python3
+  become: yes
+  become_user: "{{ deploy_user }}"
+  args:
+      creates: "{{ virtualenvs_dir }}/{{ project_name }}-env/bin/activate"
+  tags:
+      - web
+      - venv
+
+- name: Pull/And update the source hg
+  become: no
+  shell: hg pull
+      && hg update
+  when: vcs == 'hg'
+  args:
+      chdir: "{{ sites_dir }}/{{ project_name }}"
+  tags:
+      - venv 
+
+- name: Pull/And update the source git 
+  shell: git pull
+  when: vcs == 'git'
+  become: yes
+  become_user: "{{ deploy_user }}"
+  args:
+      chdir: "{{ sites_dir }}/{{ project_name }}"
+  tags:
+      - venv 
+
+- name: Install packages required by the Django app inside virtualenv
+  become: yes
+  become_user: "{{ deploy_user }}"
+  pip: virtualenv={{ virtualenvs_dir }}/{{ project_name }}-env 
+      requirements={{ sites_dir }}/{{ project_name }}/requirements/production.txt
+  tags:
+      - web
+      - venv
+
+- name: Copy/Create the postactivate env file 
+  become: yes
+  become_user: "{{ deploy_user }}"
+  template: src=postactivate.j2
+            dest={{ virtualenvs_dir }}/{{ project_name }}-env/bin/postactivate
+            owner={{ deploy_user }}
+            group={{ deploy_user }}
+            mode=0740
+            backup=yes
+  tags:
+      - web
+      - venv 
+      - postactivate 

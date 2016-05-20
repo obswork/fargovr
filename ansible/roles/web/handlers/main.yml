@@ -1,0 +1,9 @@
+- name: restart gunicorn 
+  become: yes
+  supervisorctl: name={{ project_name }}
+                 state=restarted
+
+- name: restart nginx
+  become: yes
+  service: name=nginx state=restarted
+

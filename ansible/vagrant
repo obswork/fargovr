@@ -1,0 +1,2 @@
+[all]
+staging.fargovr.com  ansible_host=192.168.33.10

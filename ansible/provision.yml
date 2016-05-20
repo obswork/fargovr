@@ -1,0 +1,23 @@
+- name: apply common configruation to all nodes
+  hosts: all 
+  remote_user: obione
+  become: true
+  roles:
+      - common
+
+- name: deploy postgreSQL and configure the database
+  hosts: all
+  remote_user: obione
+  roles:
+      - role: database 
+  tags:
+      - database
+
+- name: configure and deploy django infrastructure and application code 
+  hosts: all 
+  remote_user: obione
+  roles:
+      - role: web
+  tags:
+      - webapp 
+

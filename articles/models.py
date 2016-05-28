@@ -1,14 +1,15 @@
 from django.db import models
 from wagtail.wagtailcore.models import Page, Orderable
-from wagtail.wagtailcore.fields import StreamField
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, \
-    InlinePanel, PageChooserPanel, StreamFieldPanel
-from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
+from wagtail.wagtailcore.fields import StreamField, CharField
 from wagtail.wagtailsearch import index
 
-from wagtail.wagtailcore.blocks import TextBlock, StructBlock, StreamBlock, CharBlock, RichTextBlock, RawHTMLBlock, URLBlock, PageChooserBlock
+from wagtail.wagtailcore.blocks import TextBlock, StructBlock, StreamBlock, CharBlock, RichTextBlock, RawHTMLBlock
 from wagtail.wagtaildocs.blocks import DocumentChooserBlock
 from wagtail.wagtailembeds.blocks import EmbedBlock
+
+from wagtail.wagtailadmin.edit_handlers import (
+    FieldPanel, InlinePanel, StreamFieldPanel, ImageChooserPanel
+)
 
 from modelcluster.fields import ParentalKey
 
@@ -28,29 +29,33 @@ class Content(StreamBlock):
     raw = RawHTMLBlock(icon="code", label='Reddit Embed')
     embed = EmbedBlock(icon="media")
     document = DocumentChooserBlock(icon="doc-full-inverse")
-    link_external = URLBlock(icon='link', label='External Link')
-    link_page = PageChooserBlock(icon='link', label="Internal Link")
 
 
-# Home Page
-
-class HomePageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('newspaper.HomePage', related_name='related_links')
+class ArticleRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('article.ArticlePage', related_name='related_links')
 
 
-class HomePage(Page):
+class ArticlePage(Page):
+    subtitle = CharField(max_length=255, null=True, blank=True)
     body = StreamField(Content())
-    search_fields = Page.search_fields + (
+    date = models.DateField("Post date")
+    feed_image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+    search_field = Page.search_fields + (
         index.SearchField('body'),
+        index.SearchField('subtitle'),
     )
 
-    class Meta:
-        verbose_name = "Homepage"
 
-HomePage.content_panels = [
-    FieldPanel('title', classname="full title"),
+ArticlePage.content_panels = Page.content_panels + [
+    ImageChooserPanel('feed_image'),
+    FieldPanel('subtitle'),
     StreamFieldPanel('body'),
-    InlinePanel('related_links', label="Related links"),
+    FieldPanel('date'),
+    InlinePanel('related_links', label="Related Links"),
 ]
-
-HomePage.promote_panels = Page.promote_panels

@@ -2,7 +2,7 @@ from django.db import models
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, \
     InlinePanel, StreamFieldPanel
-from wagtail.wagtailcore.fields import BooleanField, StreamField
+from wagtail.wagtailcore.fields import StreamField
 from wagtail_embed_videos.edit_handlers import EmbedVideoChooserPanel
 from wagtail.wagtailcore.blocks import StreamBlock, RawHTMLBlock, EmbedBlock
 from modelcluster.fields import ParentalKey
@@ -51,7 +51,7 @@ class HomePageVideo(EmbedVideo, Orderable):
 
 
 class HomePage(Page):
-    auto_post = BooleanField(default=True, label="Auto frontpage posts")
+    auto_post = models.BooleanField(default=True, label="Auto frontpage posts")
     embed = StreamField(RedTwitBlock(), null=True, blank=True)
     # auto_sidebar not viable..for now..probably
     # auto_sidebar = BooleanField(default=True, label="Auto sidebar posts")

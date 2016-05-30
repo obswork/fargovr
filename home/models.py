@@ -4,7 +4,8 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel, \
     InlinePanel, StreamFieldPanel
 from wagtail.wagtailcore.fields import StreamField
 from wagtail_embed_videos.edit_handlers import EmbedVideoChooserPanel
-from wagtail.wagtailcore.blocks import StreamBlock, RawHTMLBlock, EmbedBlock
+from wagtail.wagtailembeds.blocks import EmbedBlock
+from wagtail.wagtailcore.blocks import StreamBlock, RawHTMLBlock
 from modelcluster.fields import ParentalKey
 
 # from utils.models import RelatedLink

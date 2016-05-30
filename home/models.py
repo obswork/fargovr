@@ -2,22 +2,22 @@ from django.db import models
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, \
     InlinePanel, StreamFieldPanel
-from wagtail.wagtailcore.fields import BooleanField, RichTextField
-
-
+from wagtail.wagtailcore.fields import BooleanField, StreamField
+from wagtail_embed_videos.edit_handlers import EmbedVideoChooserPanel
+from wagtail.wagtailcore.blocks import StreamBlock, RawHTMLBlock, EmbedBlock
 from modelcluster.fields import ParentalKey
 
 # from utils.models import RelatedLink
 from articles.models import ArticlePage
 
 
-"""
-# home page related links needed?
-class HomePageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('home.HomePage', related_name='related_links')
-"""
+# custom streamblock for easy reddit & twitter embeds
+class RedTwitBlock(StreamBlock):
+    twitter = EmbedBlock(icon="site")
+    reddit = RawHTMLBlock(icon="code")
 
 
+# inline-able model to add site articles to the home page
 class HomePagePost(Orderable):
     link_page = models.ForeignKey(
         'articles.ArticlePage',
@@ -28,24 +28,31 @@ class HomePagePost(Orderable):
     page = ParentalKey('home.HomePage', related_name='home_posts')
 
 
-class Feature(models.Model, Orderable)
-    body = RichTextField()
+# easy video embeds using wagtail-embed-videos package
+class EmbedVideo(models.Model):
+    video = models.ForeignKey(
+        'wagtail_embed_videos.EmbedVideo',
+        verbose_name="Video",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
 
-    page = ParentalKey('home.HomePage', related_name='features')
+    panels = [EmbedVideoChooserPanel('video')]
 
-    panels = [
-        FieldPanel('body'),
-    ]
-
-    """
-    # TODO: make feature an abstract model?
     class Meta:
         abstract = True
-    """
+
+
+# inline-able model to add videos to the featured sidebar on the home page
+class HomePageVideo(EmbedVideo, Orderable):
+    page = ParentalKey('home.HomePage', related_name='featured_video')
 
 
 class HomePage(Page):
     auto_post = BooleanField(default=True, label="Auto frontpage posts")
+    embed = StreamField(RedTwitBlock(), null=True, blank=True)
     # auto_sidebar not viable..for now..probably
     # auto_sidebar = BooleanField(default=True, label="Auto sidebar posts")
 
@@ -75,12 +82,11 @@ class HomePage(Page):
         """
         # number of sidebar miniposts to display
         count = 4
-        # see above note about auto_sidebar 
+        # see above note about auto_sidebar
         # if auto_sidebar is set on the homepage, front side bar posts will be a random selection of site content + embeds
         if self.auto_sidebar:
-            posts =  
+            posts =
         """
-
 
     class Meta:
         verbose_name = "Homepage"
@@ -89,7 +95,7 @@ HomePage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('auto_post', label="Auto update home page?"),
     StreamFieldPanel('body'),
-    # InlinePanel('related_links', label="Related links"),
-    InlinePanel('features', label="Homepage Featured Content"),
+    StreamFieldPanel('embed'),
+    InlinePanel('featured_video', label="Featured Videos"),
     InlinePanel('home_posts', label="Homepage Posts")
 ]

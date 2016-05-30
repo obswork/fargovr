@@ -75,6 +75,11 @@ INSTALLED_APPS = (
 
     'wagalytics',
     'wagtailfontawesome',
+    'embed_video',
+    'wagtail_embed_videos',
+    'home',
+    'utils',
+    'articles',
 
     # OPTIONAL APPS (site-breaking use of fixtures in pages - see: https://github.com/chrisdev/wagtail-cookiecutter-foundation/issues/257)
 

@@ -65,10 +65,11 @@ class HomePage(Page):
         if self.auto_post:
             posts = ArticlePage.objects.live().order_by('-date')[:count]
             return posts
-        # else front page posts will be those selected in the admin (inline panel) (+ enough recent articles to keep home page reasonably populated - default = 3)
+        # else front page posts will be those selected in the admin (inline panel)
         else:
             posts = self.home_posts
             num_posts = len(posts)
+            # if fewer posts are selected than count, pad posts with some recent articles
             if num_posts < count:
                 count = count - num_posts
                 more_posts = ArticlePage.objects.live().order_by('-date')[:count]
@@ -78,16 +79,25 @@ class HomePage(Page):
             else:
                 return posts
 
+    """
     @property
     def mini_posts(self):
-        """
         # number of sidebar miniposts to display
         count = 4
         # see above note about auto_sidebar
         # if auto_sidebar is set on the homepage, front side bar posts will be a random selection of site content + embeds
         if self.auto_sidebar:
             posts =
-        """
+    """
+
+    # passing additional content to template via override of get_context method
+    def get_context(self, request):
+        posts = self.posts
+        # Grab the original context dict
+        context = super(HomePage, self).get_context(request)
+        # Update the context w/ a blogs key:value
+        context['posts'] = posts
+        return context
 
     class Meta:
         verbose_name = "Homepage"

@@ -2,7 +2,7 @@ from django.db import models
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, \
     PageChooserPanel
 from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
-from wagtail.wagtailcore.fields import StreamField, CharField
+from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailcore.blocks import TextBlock, StructBlock, StreamBlock, CharBlock, RichTextBlock, RawHTMLBlock
 from wagtail.wagtaildocs.blocks import DocumentChooserBlock
 from wagtail.wagtailembeds.blocks import EmbedBlock
@@ -25,7 +25,7 @@ class Content(StreamBlock):
 
 
 class Post(models.Model):
-    subtitle = CharField(max_length=255, null=True, blank=True)
+    subtitle = models.CharField(max_length=255, null=True, blank=True)
     body = StreamField(Content())
     date = models.DateField("Post date")
     feed_image = models.ForeignKey(

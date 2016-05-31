@@ -52,7 +52,7 @@ class HomePageVideo(EmbedVideo, Orderable):
 
 
 class HomePage(Page):
-    auto_post = models.BooleanField(default=True, label="Auto frontpage posts")
+    auto_post = models.BooleanField(default=True)
     embed = StreamField(RedTwitBlock(), null=True, blank=True)
     # auto_sidebar not viable..for now..probably
     # auto_sidebar = BooleanField(default=True, label="Auto sidebar posts")
@@ -94,8 +94,7 @@ class HomePage(Page):
 
 HomePage.content_panels = [
     FieldPanel('title', classname="full title"),
-    FieldPanel('auto_post', label="Auto update home page?"),
-    StreamFieldPanel('body'),
+    FieldPanel('auto_post'),
     StreamFieldPanel('embed'),
     InlinePanel('featured_video', label="Featured Videos"),
     InlinePanel('home_posts', label="Homepage Posts")

@@ -31,6 +31,8 @@ class HomePagePost(Orderable):
 
 # easy video embeds using wagtail-embed-videos package
 class EmbedVideo(models.Model):
+    title = models.CharField(max_length=100, blank=True, null=True)
+    description = models.CharField(max_length=100, blank=True, null=True)
     video = models.ForeignKey(
         'wagtail_embed_videos.EmbedVideo',
         verbose_name="Video",
@@ -40,7 +42,7 @@ class EmbedVideo(models.Model):
         related_name='+'
     )
 
-    panels = [EmbedVideoChooserPanel('video')]
+    panels = [FieldPanel('title'), FieldPanel('description'), EmbedVideoChooserPanel('video')]
 
     class Meta:
         abstract = True

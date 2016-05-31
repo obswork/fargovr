@@ -3,9 +3,10 @@
 <html>
 
     <head>
-      <title>Future Imperfect by HTML5 UP</title>
+      <title>{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}{% block title_postfix %} | FargoVR {% endblock %}</title>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="description" content="{% if self.search_description %}{{ self.search_description }}{% endif %}">
       {% compress js %}
           <!--[if lte IE 8]><script src="{% static "site/js/html5shiv.js" %}"></script><![endif]-->
       {% endcompress %}
@@ -13,11 +14,6 @@
           <link rel="stylesheet" href="{% static "site/css/main.css" %}" />
           <!--[if lte IE 9]><link rel="stylesheet" href="{% static "site/css/ie9.css" %}"/><![endif]-->
           <!--[if lte IE 8]><link rel="stylesheet" href="{% static "site/css/ie8.css" %}"/><![endif]-->
-          <style type="text/css" media="screen">
-            blockquote.twitter-tweet {
-                margin: 0;
-            }
-          </style>
       {% endcompress %} 
       
       {% block extra_css %}{% endblock %}
@@ -63,16 +59,10 @@
 
         <!-- Main -->
         <div id="main">
+            {% block main %}{% endblock %}
 
-            {# move this to an include file in utils or elsewhere #}
-          <!-- Pagination -->
-          <ul class="actions pagination">
-            <li><a href="#" class="button big next">More</a>
-            </li>
-          </ul>
-
+            {% include 'utils/includes/prev_next.html' %}
         </div>
-
 
         <!-- Sidebar -->
         <section id="sidebar">
@@ -86,6 +76,8 @@
               <h2>FargoVR</h2>
             </header>
           </section>
+
+          {% block sidebar %}{% endblock %}
 
           <!-- About -->
           <section class="blurb">

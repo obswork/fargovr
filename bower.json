@@ -2,7 +2,8 @@
   "name": "fargovr",
   "dependencies": {
     
-    "font-awesome": "~4.5.0"
+    "font-awesome": "~4.5.0",
+    "jquery": "https://code.jquery.com/jquery-2.2.4.min.js"
     
  }
 }

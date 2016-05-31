@@ -1,1 +1,10 @@
 {% extends "home/home_base.html" %}
+
+{% block main %}
+    {% include "home/includes/post_item.html" with posts=self.posts.all only %}
+{% endblock %}
+
+{% block sidebar %}
+{# {% include "home/includes/mini_post.html" with embeds=self.embed.all only %} #}
+    {% include "home/includes/mini_post.html" with embeds=self.featured_video.all only %}
+{% endblock %}

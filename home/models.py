@@ -60,26 +60,31 @@ class HomePage(Page):
     # auto_sidebar = BooleanField(default=True, label="Auto sidebar posts")
 
     @property
-    def posts(self):
+    def auto_posts(self):
         # number of posts to display on homepage
         count = 3
         # if auto_post is set on the homepage, front page posts will be 3 most recent articles from db
         if self.auto_post:
-            posts = ArticlePage.objects.live().order_by('-date')[:count]
-            return posts
+            auto_posts = ArticlePage.objects.live().order_by('-date')[:count]
+            return auto_posts
         # else front page posts will be those selected in the admin (inline panel)
         else:
-            posts = self.home_posts
-            num_posts = len(posts)
-            # if fewer posts are selected than count, pad posts with some recent articles
-            if num_posts < count:
-                count = count - num_posts
-                more_posts = ArticlePage.objects.live().order_by('-date')[:count]
-                # len(selected posts + recent posts) = count
-                posts = posts + more_posts
-                return posts
-            else:
-                return posts
+            pass
+
+    @property
+    def posts(self):
+        posts = self.home_posts.all()
+        return posts
+
+        # num_posts = len(posts)
+        # if fewer posts are selected than count, pad posts with some recent articles
+        # if num_posts < count:
+        #     count = count - num_posts
+        #     more_posts = ArticlePage.objects.live().order_by('-date')[:count]
+        #     # len(selected posts + recent posts) = count
+        #     posts = posts + more_posts
+        #     return posts
+        # else:
 
     """
     @property
@@ -94,11 +99,12 @@ class HomePage(Page):
 
     # passing additional content to template via override of get_context method
     def get_context(self, request):
-        posts = self.posts
         # Grab the original context dict
         context = super(HomePage, self).get_context(request)
         # Update the context w/ a blogs key:value
-        context['posts'] = posts
+        context['posts'] = self.posts
+        if self.auto_post:
+            context['auto_posts'] = self.auto_posts
         return context
 
     class Meta:

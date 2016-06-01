@@ -36,7 +36,9 @@
           </footer>
         </article>
     {% endfor %}
-{% else %}
+{% elif not auto %}
     <h1>NO POSTS YET!</h1>
+{% else %}
+    <h1>WHOOPS!</h1>
 {% endif %}
 

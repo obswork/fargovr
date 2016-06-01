@@ -2,8 +2,9 @@
 
 {% block main %}
     {% include "home/includes/post_item.html" with posts=self.posts.all only %}
+    {% include "home/includes/post_item.html" with posts=self.auto_posts.all auto=True only %}
 {% endblock %}
 
 {% block sidebar %}
-    {% include "home/includes/mini_post.html" with vids=self.featured_video.all embeds=self.embed.all only %}
+    {% include "home/includes/mini_post.html" with vids=self.featured_video.all embeds=self.embed only %}
 {% endblock %}

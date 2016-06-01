@@ -5,6 +5,5 @@
 {% endblock %}
 
 {% block sidebar %}
-{# {% include "home/includes/mini_post.html" with embeds=self.embed.all only %} #}
-    {% include "home/includes/mini_post.html" with embeds=self.featured_video.all only %}
+    {% include "home/includes/mini_post.html" with vids=self.featured_video.all embeds=self.embed.all only %}
 {% endblock %}

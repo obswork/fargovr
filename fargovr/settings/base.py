@@ -81,18 +81,6 @@ INSTALLED_APPS = (
     'home',
     'utils',
     'articles',
-
-    # OPTIONAL APPS (site-breaking use of fixtures in pages - see: https://github.com/chrisdev/wagtail-cookiecutter-foundation/issues/257)
-
-    # 'utils',
-    # 'pages',
-    # 'blog',
-    # 'events',
-    # 'contact',
-    # 'people',
-    # 'photo_gallery',
-    # 'products',
-    # 'documents_gallery',
 )
 
 MIDDLEWARE_CLASSES = (

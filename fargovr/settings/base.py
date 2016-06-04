@@ -48,6 +48,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'overextends',
+    'dashboard',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -113,6 +115,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # 'pages.context_processors.site_url',
             ],
+            'builtins': ['overextends.templatetags.overextends_tags'],
         },
     },
 ]
